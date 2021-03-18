@@ -11,6 +11,7 @@
             <ColumnDefinition Width="50"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"></RowDefinition>
@@ -18,17 +19,18 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Label>Ville(s) :</Label>
-        <TextBox x:Name="tb_villes" Grid.Column="1"/>
-        <Button Click="Button_Click" Grid.Column="2" x:Name="btn_get" >Récupérer météo</Button>
-        <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" IsIndeterminate="True" x:Name="progress" Visibility="Hidden"></ProgressBar>
-        <DataGrid x:Name="gd_results" Grid.Row="2" Grid.ColumnSpan="3">
+        <TextBox x:Name="tb_villes" Grid.Column="1" />
+        <Button Click="Button_Click" Grid.Column="2" x:Name="btn_get">Récupérer météo</Button>
+        <Button Click="Btn_cancel_OnClick" Grid.Column="3" x:Name="btn_cancel" IsEnabled="False">Annuler</Button>
+        <ProgressBar Grid.Row="1" Grid.ColumnSpan="4" IsIndeterminate="True" x:Name="progress" Visibility="Hidden"></ProgressBar>
+        <DataGrid x:Name="gd_results" Grid.Row="2" Grid.ColumnSpan="4">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Ville" Width="*" Binding="{Binding Town}" />
                 <DataGridTextColumn Header="J+1" Width="*" Binding="{Binding JPlus1}" />
-                <DataGridTextColumn Header="J+2" Width="*" Binding="{Binding JPlus2}"/>
-                <DataGridTextColumn Header="J+3" Width="*" Binding="{Binding JPlus3}"/>
-                <DataGridTextColumn Header="J+4" Width="*" Binding="{Binding JPlus4}"/>
-                <DataGridTextColumn Header="J+5" Width="*" Binding="{Binding JPlus5}"/>
+                <DataGridTextColumn Header="J+2" Width="*" Binding="{Binding JPlus2}" />
+                <DataGridTextColumn Header="J+3" Width="*" Binding="{Binding JPlus3}" />
+                <DataGridTextColumn Header="J+4" Width="*" Binding="{Binding JPlus4}" />
+                <DataGridTextColumn Header="J+5" Width="*" Binding="{Binding JPlus5}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -10,11 +10,11 @@ namespace WpfClient
 {
     public class WeatherService
     {
-        public async Task<List<WeatherForecast>> GetWeather(string town)
+        public async Task<List<WeatherForecast>> GetWeather(string town,CancellationToken token)
         {
             var client = new HttpClient();
 
-            var response = await client.GetAsync($"http://localhost:9876/WeatherForecast/{town}");
+            var response = await client.GetAsync($"http://localhost:9876/WeatherForecast/{town}", token);
             var responseString = await response.Content.ReadAsStringAsync();
             var forecasts = JsonConvert.DeserializeObject<List<WeatherForecast>>(responseString);
 

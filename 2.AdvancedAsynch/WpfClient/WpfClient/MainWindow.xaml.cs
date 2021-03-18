@@ -24,25 +24,55 @@ namespace WpfClient
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             btn_get.IsEnabled = false;
+            btn_cancel.IsEnabled = true;
             gd_results.Items.Clear();
             var town = tb_villes.Text;
             progress.IsIndeterminate = true;
             progress.Visibility = Visibility.Visible;
 
-            var result = await service.GetWeather(town);
-            gd_results.Items.Add(new ResultRow
+            try
             {
-                Town = town,
-                JPlus1 = result[0].TemperatureC.ToString(),
-                JPlus2 = result[1].TemperatureC.ToString(),
-                JPlus3 = result[2].TemperatureC.ToString(),
-                JPlus4 = result[3].TemperatureC.ToString(),
-                JPlus5 = result[4].TemperatureC.ToString()
-            });
+                tokenSource = new CancellationTokenSource();
+                var result = await service.GetWeather(town, tokenSource.Token);
+                gd_results.Items.Add(new ResultRow
+                {
+                    Town = town,
+                    JPlus1 = result[0].TemperatureC.ToString(),
+                    JPlus2 = result[1].TemperatureC.ToString(),
+                    JPlus3 = result[2].TemperatureC.ToString(),
+                    JPlus4 = result[3].TemperatureC.ToString(),
+                    JPlus5 = result[4].TemperatureC.ToString()
+                });
+            }
+            catch (OperationCanceledException exception)
+            {
+                Console.WriteLine(exception);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+            finally
+            {
+                resetGui();
+            }
 
+            
+        }
+
+        private void resetGui()
+        {
             progress.IsIndeterminate = false;
             progress.Visibility = Visibility.Hidden;
             btn_get.IsEnabled = true;
+            btn_cancel.IsEnabled = false;
+        }
+
+        private void Btn_cancel_OnClick(object sender, RoutedEventArgs e)
+        {
+            tokenSource.Cancel();
+            resetGui();
         }
     }
 }
