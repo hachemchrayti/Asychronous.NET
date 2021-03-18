@@ -34,6 +34,7 @@ namespace WpfClient
             try
             {
                 tokenSource = new CancellationTokenSource();
+                tokenSource.CancelAfter(TimeSpan.FromSeconds(5));
                 await Task.Run(() =>
                 {
                     Parallel.ForEach(towns, new ParallelOptions { CancellationToken = tokenSource.Token }, town =>
