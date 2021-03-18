@@ -18,14 +18,14 @@ namespace WpfClient
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             progress.IsIndeterminate = true;
             progress.Visibility = Visibility.Visible;
 
             var client = new WebClient();
 
-            var response = client.DownloadString("http://localhost:9876/WeatherForecast");
+            var response = await client.DownloadStringTaskAsync("http://localhost:9876/WeatherForecast");
 
             var forecasts = JsonConvert.DeserializeObject<List<WeatherForecast>>(response);
 
