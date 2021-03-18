@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Common;
 
 namespace WpfClient
 {
@@ -26,23 +27,35 @@ namespace WpfClient
             btn_get.IsEnabled = false;
             btn_cancel.IsEnabled = true;
             gd_results.Items.Clear();
-            var town = tb_villes.Text;
+            var towns = tb_villes.Text.Split(';');
             progress.IsIndeterminate = true;
             progress.Visibility = Visibility.Visible;
 
             try
             {
                 tokenSource = new CancellationTokenSource();
-                var result = await service.GetWeather(town, tokenSource.Token);
-                gd_results.Items.Add(new ResultRow
+                var dico = new Dictionary<string,Task<List<WeatherForecast>>>();
+                foreach (var town in towns)
                 {
-                    Town = town,
-                    JPlus1 = result[0].TemperatureC.ToString(),
-                    JPlus2 = result[1].TemperatureC.ToString(),
-                    JPlus3 = result[2].TemperatureC.ToString(),
-                    JPlus4 = result[3].TemperatureC.ToString(),
-                    JPlus5 = result[4].TemperatureC.ToString()
-                });
+                    dico.Add(town, service.GetWeather(town, tokenSource.Token));
+                }
+
+               await Task.WhenAll(dico.Values);
+                foreach (var item in dico)
+                {
+                    gd_results.Items.Add(new ResultRow
+                    {
+                        Town = item.Key,
+                        JPlus1 = item.Value.Result[0].TemperatureC.ToString(),
+                        JPlus2 = item.Value.Result[1].TemperatureC.ToString(),
+                        JPlus3 = item.Value.Result[2].TemperatureC.ToString(),
+                        JPlus4 = item.Value.Result[3].TemperatureC.ToString(),
+                        JPlus5 = item.Value.Result[4].TemperatureC.ToString()
+                    });
+                }
+
+                
+
             }
             catch (OperationCanceledException exception)
             {
